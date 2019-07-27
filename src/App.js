@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 const wrapperStyle = {
-  height: '800px',
+  height: '820px',
   display: 'flex',
   flexDirection: 'row',
   border: '1px solid black',
@@ -18,6 +18,8 @@ const gridWrapper = {
   position: 'relative',
 }
 
+const getStyleProp = (str) => Number(str.replace('px', ''));
+
 class MagicGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -26,14 +28,28 @@ class MagicGrid extends React.Component {
     this.wrapperRef = React.createRef();
     this.state = {
       start: 0,
-      end: 20,
+      end: 0,
     }
   }
 
+  componentDidMount() {
+    const { height } = this.getWrapperStyle();
+    this.setState({
+      end: Math.ceil(height / this.props.rowHeight),
+    })
+  }
+
+  getWrapperStyle() {
+    const wrapperStyles = window.getComputedStyle(this.wrapperRef.current);
+    const height = getStyleProp(wrapperStyles.height);
+    return { height };
+  }
+
   getStyleProps() {
+    const { height } = this.getWrapperStyle();
     const currentScollTop = this.wrapperRef.current.scrollTop;
     const { rowHeight } = this.props;
-    let maxVisibleRows = Math.ceil(800 / rowHeight);
+    let maxVisibleRows = Math.ceil(height / rowHeight);
     let startIndex = 0;
     let endIndex;
     let currentIndex = Math.floor(currentScollTop / rowHeight);
@@ -53,6 +69,7 @@ class MagicGrid extends React.Component {
       <div ref={this.wrapperRef} onScroll={this.getStyleProps} style={wrapperStyle}>
         <div ref={this.gridWrapper} style={gridWrapper}>
           {
+            this.state.end > 0 &&
             this.props.children(this.state.start, this.state.end, this.state.scrollTop)
           }
         </div>

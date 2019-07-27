@@ -26,7 +26,7 @@ class MagicGrid extends React.Component {
     this.wrapperRef = React.createRef();
     this.state = {
       start: 0,
-      end: 40,
+      end: 20,
     }
   }
 
@@ -44,6 +44,7 @@ class MagicGrid extends React.Component {
     this.setState({
       start: startIndex,
       end: endIndex,
+      scrollTop: currentScollTop
     })
   }
 
@@ -52,7 +53,7 @@ class MagicGrid extends React.Component {
       <div ref={this.wrapperRef} onScroll={this.getStyleProps} style={wrapperStyle}>
         <div ref={this.gridWrapper} style={gridWrapper}>
           {
-            this.props.children(this.state.start, this.state.end)
+            this.props.children(this.state.start, this.state.end, this.state.scrollTop)
           }
         </div>
       </div>
@@ -79,26 +80,56 @@ class Row extends React.Component {
     return <div
       onMouseOut={() => { this.updateBg(false) }}
       onMouseOver={() => { this.updateBg(true) }}
-      style={{ display: 'flex', width: '100%', height: '20px', background: this.state.over ? 'salmon' : '' }}>
+      style={{ display: 'flex', width: '100%', height: '40px', background: this.state.over ? 'salmon' : '' }}>
       {this.props.number} Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
   </div>
   }
 }
 
 function App() {
-
-  const arr = Array(8000);
-  for (let i = 0; i < 8000; i++) {
+  const arr = Array(4000);
+  for (let i = 0; i < 4000; i++) {
     arr[i] = i;
   }
 
-  const getRows = (start, end) => {
+  const getRows = (start, end, scrollTop) => {
     if (start === -1 || end === -1) return null;
-    const slice = arr.slice(start, end);
+
+    let startIndex = start;
+    let endIndex = end;
+
+    if (start > 2) {
+      startIndex = start - 1;
+    }
+
+    if (end < 501) {
+      endIndex = end + 1;
+    }
+
+    const slice = arr.slice(
+      startIndex,
+      endIndex
+    );
+
     if (slice && slice.length) {
-      return slice.map((num) => {
+      const tmp = slice.map((num) => {
         return <Row number={num} />
       })
+
+      if (start) {
+        let first = [];
+
+        let rest = Math.floor(scrollTop / 40);
+
+        for (let i = 0; i < rest - 1; i++) {
+          first.push(<div style={{ height: '40px' }}></div>);
+        }
+
+        return first.concat(tmp);
+      }
+
+      return tmp;
+
     }
   }
 
@@ -106,9 +137,9 @@ function App() {
     <div className="App">
       <div style={{ marginTop: '50px' }}>
         <MagicGrid
-          rowHeight={20}>
-          {(start, end) => {
-            return <div style={{ display: 'flex', flexDirection: 'column', position: 'fixed' }}>{getRows(start, end)}</div>
+          rowHeight={40}>
+          {(start, end, scrollTop) => {
+            return <div style={{ display: 'flex', flexDirection: 'column' }}>{getRows(start, end, scrollTop)}</div>
           }}
         </MagicGrid>
       </div>

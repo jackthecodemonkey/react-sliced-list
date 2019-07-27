@@ -11,11 +11,17 @@ const wrapperStyle = {
 }
 
 const gridWrapper = {
-  height: '160000px',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
   position: 'relative',
+}
+
+const gridWrapperStyle = (height) => {
+  return {
+    ...gridWrapper,
+    height: `${height}px`,
+  }
 }
 
 const getStyleProp = (str) => Number(str.replace('px', ''));
@@ -39,8 +45,8 @@ class MagicGrid extends React.Component {
     })
   }
 
-  getWrapperStyle() {
-    const wrapperStyles = window.getComputedStyle(this.wrapperRef.current);
+  getWrapperStyle(wrapper = this.wrapperRef) {
+    const wrapperStyles = window.getComputedStyle(wrapper.current);
     const height = getStyleProp(wrapperStyles.height);
     return { height };
   }
@@ -64,13 +70,20 @@ class MagicGrid extends React.Component {
     })
   }
 
+  ren(r) {
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{r}</div>;
+  }
+
   render() {
     return (
-      <div ref={this.wrapperRef} onScroll={this.getStyleProps} style={wrapperStyle}>
-        <div ref={this.gridWrapper} style={gridWrapper}>
+      <div
+        ref={this.wrapperRef}
+        onScroll={this.getStyleProps}
+        style={wrapperStyle}>
+        <div ref={this.gridWrapper} style={gridWrapperStyle(this.props.totalRows * this.props.rowHeight)}>
           {
             this.state.end > 0 &&
-            this.props.children(this.state.start, this.state.end, this.state.scrollTop)
+            this.ren(this.props.children(this.state.start, this.state.end, this.state.scrollTop))
           }
         </div>
       </div>
@@ -142,12 +155,9 @@ function App() {
         for (let i = 0; i < rest - offset; i++) {
           first.push(<div style={{ height: '40px' }}></div>);
         }
-
         return first.concat(tmp);
       }
-
       return tmp;
-
     }
   }
 
@@ -155,9 +165,10 @@ function App() {
     <div className="App">
       <div style={{ marginTop: '50px' }}>
         <MagicGrid
+          totalRows={4000}
           rowHeight={40}>
           {(start, end, scrollTop) => {
-            return <div style={{ display: 'flex', flexDirection: 'column' }}>{getRows(start, end, scrollTop)}</div>
+            return getRows(start, end, scrollTop)
           }}
         </MagicGrid>
       </div>

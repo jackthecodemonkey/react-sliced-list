@@ -97,13 +97,16 @@ function App() {
 
     let startIndex = start;
     let endIndex = end;
+    let offset = 0;
 
     if (start > 2) {
       startIndex = start - 1;
+    } else {
+      endIndex = end + 1;
     }
 
-    if (end < 501) {
-      endIndex = end + 1;
+    if (end > 3980) {
+      offset = 1;
     }
 
     const slice = arr.slice(
@@ -118,10 +121,8 @@ function App() {
 
       if (start) {
         let first = [];
-
         let rest = Math.floor(scrollTop / 40);
-
-        for (let i = 0; i < rest - 1; i++) {
+        for (let i = 0; i < rest - offset; i++) {
           first.push(<div style={{ height: '40px' }}></div>);
         }
 

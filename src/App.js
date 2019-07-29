@@ -8,13 +8,13 @@ const wrapperStyle = {
   flexDirection: 'row',
   border: '1px solid black',
   overflow: 'auto',
+  position: 'relative',
 }
 
 const gridWrapper = {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  position: 'relative',
 }
 
 const gridWrapperStyle = (height) => {
@@ -56,18 +56,6 @@ class SmallScroll extends React.Component {
     return Math.ceil(height / this.props.rowHeight);
   }
 
-  rowStartIndex(startIndex) {
-    return startIndex > 2
-      ? startIndex - 1
-      : startIndex
-  }
-
-  rowEndIndex(startIndex, endIndex) {
-    return startIndex <= 2
-      ? endIndex + 1
-      : endIndex
-  }
-
   handleOnScroll() {
     const currentScollTop = this.wrapperRef.current.scrollTop;
     let startIndex = 0;
@@ -78,31 +66,13 @@ class SmallScroll extends React.Component {
     endIndex = this.maxVisibleRows + currentIndex;
 
     this.setState({
-      start: this.rowStartIndex(startIndex),
-      end: this.rowEndIndex(startIndex, endIndex),
-      scrollTop: currentScollTop
+      start: startIndex,
+      end: endIndex,
     })
   }
 
   renderChildren(rows) {
-    let first = [];
-    if (this.state.start) {
-      let rest = Math.floor(this.state.scrollTop / this.props.rowHeight);
-      let offset = 0;
-      let lastPage = this.props.totalRows - this.maxVisibleRows;
-      if (this.endIndex > lastPage) {
-        offset = 1;
-      }
-      for (let i = 0; i < rest - offset; i++) {
-        first.push(<div style={{ height: `${this.props.rowHeight}px` }}></div>);
-      }
-      return first.concat(rows);
-    }
-    const rowsToRender = first.length
-      ? first
-      : rows;
-    if (!rowsToRender.length) return null;
-    return <div style={{ display: 'flex', flexDirection: 'column' }}>{rowsToRender}</div>;
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{rows}</div>;
   }
 
   render() {
@@ -114,7 +84,7 @@ class SmallScroll extends React.Component {
         <div ref={this.gridWrapper} style={gridWrapperStyle(this.props.totalRows * this.props.rowHeight)}>
           {
             this.state.end > 0 &&
-            this.renderChildren(this.props.children(this.state.start, this.state.end, this.state.scrollTop))
+            this.renderChildren(this.props.children(this.state.start, this.state.end))
           }
         </div>
       </div>
@@ -141,7 +111,7 @@ class Row extends React.Component {
     return <div
       onMouseOut={() => { this.updateBg(false) }}
       onMouseOver={() => { this.updateBg(true) }}
-      style={{ display: 'flex', width: '100%', height: '40px', background: this.state.over ? 'salmon' : '' }}>
+      style={{ display: 'flex', width: '100%', height: '40px', background: this.state.over ? 'salmon' : '', ...this.props.style }}>
       {this.props.number} Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
   </div>
   }
@@ -155,8 +125,9 @@ function App() {
 
   const getRows = (start, end) => {
     const slice = arr.slice(start, end);
-    return slice.map((num) => {
-      return <Row number={num} />
+    return slice.map((num, index) => {
+      const top = (start + index) * 40
+      return <Row style={{ position: 'absolute', top: `${top}px` }} number={num} />
     })
   }
 

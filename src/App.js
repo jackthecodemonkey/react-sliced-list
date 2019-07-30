@@ -3,11 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 
 const wrapperStyle = {
-  height: '820px',
+  height: '100%',
+  width: '100%',
   display: 'flex',
   flexDirection: 'row',
-  border: '1px solid black',
-  overflow: 'auto',
+  overflowY: 'auto',
   position: 'relative',
 }
 
@@ -15,6 +15,13 @@ const gridWrapper = {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
+}
+
+const getWrapperStyle = (style = {}) => {
+  return {
+    ...wrapperStyle,
+    ...style
+  }
 }
 
 const gridWrapperStyle = (height) => {
@@ -26,7 +33,7 @@ const gridWrapperStyle = (height) => {
 
 const getStyleProp = (str) => Number(str.replace('px', ''));
 
-class SmallScroll extends React.Component {
+class ShortList extends React.Component {
   constructor(props) {
     super(props);
     this.gridWrapper = React.createRef();
@@ -40,9 +47,7 @@ class SmallScroll extends React.Component {
 
   componentDidMount() {
     const { height } = this.getWrapperStyle();
-    this.setState({
-      end: Math.ceil(height / this.props.rowHeight),
-    })
+    this.setState({ end: Math.ceil(height / this.props.rowHeight) })
   }
 
   getWrapperStyle(wrapper = this.wrapperRef) {
@@ -65,14 +70,39 @@ class SmallScroll extends React.Component {
     if (currentIndex > 0) startIndex = currentIndex
     endIndex = this.maxVisibleRows + currentIndex;
 
+    if (startIndex > 0) {
+      startIndex = startIndex - 1;
+    }
+
     this.setState({
       start: startIndex,
-      end: endIndex,
+      end: endIndex + 1,
     })
   }
 
+  getRow(top, child) {
+    return <div
+      style={{
+        top: `${top}px`,
+        height: `${this.props.rowHeight}px`,
+        position: 'absolute',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+      }}>
+      {child}
+    </div>
+  }
+
+  getRowTopValue(index) {
+    return (this.state.start + index) * this.props.rowHeight;
+  }
+
   renderChildren(rows) {
-    return <div style={{ display: 'flex', flexDirection: 'column' }}>{rows}</div>;
+    const children = React.Children.map(rows, (child, index) => {
+      return this.getRow(this.getRowTopValue(index), child);
+    })
+    return <div style={{ display: 'flex', flexDirection: 'column' }}>{children}</div>;
   }
 
   render() {
@@ -80,7 +110,7 @@ class SmallScroll extends React.Component {
       <div
         ref={this.wrapperRef}
         onScroll={this.handleOnScroll}
-        style={wrapperStyle}>
+        style={getWrapperStyle(this.props.listStyle)}>
         <div ref={this.gridWrapper} style={gridWrapperStyle(this.props.totalRows * this.props.rowHeight)}>
           {
             this.state.end > 0 &&
@@ -111,7 +141,7 @@ class Row extends React.Component {
     return <div
       onMouseOut={() => { this.updateBg(false) }}
       onMouseOver={() => { this.updateBg(true) }}
-      style={{ display: 'flex', width: '100%', height: '40px', background: this.state.over ? 'salmon' : '', ...this.props.style }}>
+      style={{ display: 'flex', width: '100%', background: this.state.over ? 'salmon' : '', ...this.props.style }}>
       {this.props.number} Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
   </div>
   }
@@ -125,22 +155,25 @@ function App() {
 
   const getRows = (start, end) => {
     const slice = arr.slice(start, end);
-    return slice.map((num, index) => {
-      const top = (start + index) * 40
-      return <Row style={{ position: 'absolute', top: `${top}px` }} number={num} />
+    return slice.map((num) => {
+      return <Row number={num} />
     })
   }
 
   return (
     <div className="App">
       <div style={{ marginTop: '50px' }}>
-        <SmallScroll
+        <ShortList
+          listStyle={{
+            height: '800px',
+            border: '1px solid black',
+          }}
           totalRows={2000}
           rowHeight={40}>
           {(start, end) => {
             return getRows(start, end)
           }}
-        </SmallScroll>
+        </ShortList>
       </div>
     </div>
   );

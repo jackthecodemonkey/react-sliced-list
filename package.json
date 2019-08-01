@@ -1,7 +1,24 @@
 {
-  "name": "dotdotdot",
-  "version": "0.1.0",
-  "private": true,
+  "name": "react-sliced-list",
+  "version": "1.0.0",
+  "private": false,
+  "license": "ISC",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "babel": {
+    "presets": [
+      "@babel/react"
+    ]
+  },
+  "keywords": [
+    "react",
+    "react component",
+    "react list",
+    "react list truncate",
+    "react partial list"
+  ],
+  "author": "Jack",
+  "publish:npm": "SET NODE_ENV=production && if exist dist rmdir /s /q dist && mkdir dist && npx babel src/slicedList --out-dir dist --copy-files",
   "dependencies": {
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -31,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5"
   }
 }

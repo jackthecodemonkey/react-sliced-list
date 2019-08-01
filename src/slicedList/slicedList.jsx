@@ -14,6 +14,7 @@ const gridWrapper = {
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+    width: '100%',
 }
 
 const getWrapperStyle = (style = {}) => {
@@ -32,7 +33,7 @@ const gridWrapperStyle = (height) => {
 
 const getStyleProp = (str) => Number(str.replace('px', ''));
 
-class ShortList extends React.Component {
+class SlicedList extends React.Component {
     constructor(props) {
         super(props);
         this.gridWrapper = React.createRef();
@@ -124,14 +125,14 @@ class ShortList extends React.Component {
     }
 }
 
-ShortList.propTypes = {
+SlicedList.propTypes = {
     totalRows: PropTypes.number.isRequired,
     rowHeight: PropTypes.number.isRequired,
     listStyle: PropTypes.shape({}),
 }
 
-ShortList.defaultProps = {
+SlicedList.defaultProps = {
     listStyle: {},
 }
 
-export default ShortList;
+export default SlicedList;

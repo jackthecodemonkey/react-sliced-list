@@ -1,5 +1,5 @@
 import React from 'react';
-import ShortList from './ShortList';
+import SlicedList from '../slicedList';
 import { shallow } from 'enzyme';
 
 const arr = Array(1000);
@@ -26,16 +26,11 @@ let wrapper = null;
 let startIndex = 0;
 let endIndex = 0;
 
-describe('ShortList', () => {
-
-    afterAll(() => {
-        window = null;
-    });
-
+describe('SlicedList', () => {
     beforeEach(() => {
         wrapperHeight = 850;
         wrapper = shallow(
-            <ShortList
+            <SlicedList
                 totalRows={2000}
                 rowHeight={40}>
                 {(start, end) => {
@@ -43,7 +38,7 @@ describe('ShortList', () => {
                     endIndex = end;
                     return getRows(start, end)
                 }}
-            </ShortList>
+            </SlicedList>
         );
     })
 

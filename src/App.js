@@ -1,36 +1,49 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import ShortList from './ShortList';
+import SlicedList from './slicedList';
 
 class Row extends React.Component {
   constructor(props) {
     super(props);
-    this.updateBg = this.updateBg.bind(this);
+    this.showBg = this.showBg.bind(this);
+    this.hideBg = this.hideBg.bind(this);
     this.state = {
-      over: false,
+      show: false,
     }
   }
 
-  updateBg(val) {
+  showBg() {
     this.setState({
-      over: val
+      show: true,
+    })
+  }
+
+  hideBg() {
+    this.setState({
+      show: false,
     })
   }
 
   render() {
-    return <div
-      onMouseOut={() => { this.updateBg(false) }}
-      onMouseOver={() => { this.updateBg(true) }}
-      style={{ display: 'flex', width: '100%', background: this.state.over ? 'salmon' : '', ...this.props.style }}>
-      {this.props.number} Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
-  </div>
+    const {
+      props,
+    } = this;
+
+    let bg = props.number % 2 === 0 ? '#fcffff' : '#f2fcfb';
+    if (this.state.show) bg = 'lightskyblue';
+    return (
+      <div
+        onMouseOver={this.showBg}
+        onMouseLeave={this.hideBg}
+        style={{ display: 'flex', width: '100%', flexDirection: 'column', background: bg, padding: '10px', }}>
+        {props.number}
+      </div>
+    )
   }
 }
 
 function App() {
-  const arr = Array(2000);
-  for (let i = 0; i < 2000; i++) {
+  const arr = Array(20000);
+  for (let i = 0; i < 20000; i++) {
     arr[i] = i;
   }
 
@@ -43,14 +56,14 @@ function App() {
 
   return (
     <div className="App">
-      <ShortList
-        listStyle={{ height: '800px', border: '1px solid #eee', width: '800px' }}
-        totalRows={2000}
+      <SlicedList
+        listStyle={{ height: '400px', border: '1px solid #eee', width: '400px', margin: '0 auto', marginTop: '50px' }}
+        totalRows={20000}
         rowHeight={40}>
         {(start, end) => {
           return getRows(start, end)
         }}
-      </ShortList>
+      </SlicedList>
     </div>
   );
 }

@@ -4,11 +4,11 @@
 
 Render 20,000 rows with mouse hover event
 
-With 
+**Using the component**
 
 ![Screenshot](/public/screenshot/applied.gif)
 
-Without ( very slow on changing row background )
+**Without ( slow on even changing row background )**
 
 ![Screenshot](/public/screenshot/without.gif)
 

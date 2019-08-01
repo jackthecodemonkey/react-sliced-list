@@ -1,4 +1,4 @@
-## Simple React component
+## Optimizing rendering performace for a long list
 
 **Render only partial items from your long list for better performace**
 

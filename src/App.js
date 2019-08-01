@@ -57,7 +57,7 @@ function App() {
   return (
     <div className="App">
       <SlicedList
-        listStyle={{ height: '400px', border: '1px solid #eee', width: '400px', margin: '0 auto', marginTop: '50px' }}
+        listStyle={{ height: '400px', width: '400px' }}
         totalRows={20000}
         rowHeight={40}>
         {(start, end) => {

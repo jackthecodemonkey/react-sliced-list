@@ -28,6 +28,10 @@
     "react-scripts": "3.0.1",
     "react-test-renderer": "^16.8.6"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackthecodemonkey/react-sliced-list.git"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

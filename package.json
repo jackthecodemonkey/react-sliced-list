@@ -1,6 +1,6 @@
 {
   "name": "react-sliced-list",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": false,
   "license": "ISC",
   "main": "dist/index.js",
@@ -17,16 +17,14 @@
     "react list truncate",
     "react partial list"
   ],
+  "bundleDependencies": [],
   "author": "Jack",
-  "dependencies": {
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
+  "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
-    "react-test-renderer": "^16.8.6"
+    "react-dom": "^16.8.6"
   },
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "https://github.com/jackthecodemonkey/react-sliced-list.git"
@@ -54,6 +52,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5"
+    "react-test-renderer": "^16.8.6",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0"
   }
 }

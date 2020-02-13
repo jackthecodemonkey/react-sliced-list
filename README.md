@@ -2,13 +2,11 @@
 
 **Render only partial items from your long list for better performace**
 
-Render 20,000 rows with mouse hover event
-
 **Using the component**
 
 ![Screenshot](/public/screenshot/applied.gif)
 
-**Without ( slow on even changing row background )**
+**Without**
 
 ![Screenshot](/public/screenshot/without.gif)
 
